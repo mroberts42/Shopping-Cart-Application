@@ -1,0 +1,444 @@
+#include <vector>
+#include <iostream>
+#include <sstream>
+#include <fstream>
+using namespace std;
+
+
+class Item
+{
+	protected:
+		string title;
+		double price;
+
+	public:
+		void setTitle(string x)
+		{
+			title = x;
+		};
+
+		string getTitle()
+		{
+			return title;
+		};
+
+		void setPrice(double x)
+		{
+			price = x;
+		}
+
+		double getPrice()
+		{
+
+			return price;
+		}
+
+
+		Item()
+		{
+
+		}
+		Item(string a)
+		{
+			title = a;
+		}
+		Item(string a, int b)
+		{
+			title = a;
+			price = b;
+		}
+
+};
+
+//template <class T>
+class Book :public Item
+{
+	private:
+		string author;
+	public:
+		Book()
+		{
+
+		}
+		Book(string a, double b, string x)
+		{
+			title = a;
+			price = b;
+			author = x;
+
+		}
+		string getAuthor()
+		{
+			return author;
+		}
+		void details()
+		{
+			cout << title << ", $" << price << ", author: " << author <<  "\n";
+		}
+
+};
+
+class Mag :public Item
+{
+	private:
+		int issNum;
+		int month;
+		int year;
+	public:
+		Mag()
+		{
+
+		}
+		Mag(string a, double b, int y, int z, int q)
+		{
+			title = a;
+			price = b;
+			issNum = y;
+			month = z;
+			year = q;
+		}
+		int getIssue()
+		{
+			return issNum;
+		}
+		int getYear()
+		{
+			return year;
+		}
+		int getMonth()
+		{
+			return month;
+		}
+		void details()
+		{
+			cout << title << ", $" << price <<  ", issue number: " << issNum << ", month: " << month << ", year: " << year << "\n";
+		}
+
+};
+
+class CD : public Item
+{
+	public:
+		string artist;
+		string label;
+		CD()
+		{
+
+		}
+		CD(string a, double b, string x, string y)
+		{
+			title = a;
+			price = b;
+			artist = x;
+			label = y;
+		}
+		void details()
+		{
+			cout << title << ", $" << 	price << ", artist: " << artist << ", label: " << label <<  "\n";
+		}
+		string getArtist()
+		{
+			return artist;
+		}
+		string getLabel()
+		{
+			return label;
+		}
+
+};
+
+
+class Cart
+{
+	private:
+		vector<Book> bCart;
+		vector<CD> cCart;
+		vector<Mag> mCart;
+
+	public:
+		void addItem(Book x)
+		{
+			bCart.push_back(x);
+		};
+		void addItem(CD x)
+		{
+			cCart.push_back(x);
+		};
+		void addItem(Mag x)
+		{
+			mCart.push_back(x);
+		};
+
+
+		void printCart()
+		{
+			cout << "Books in Cart: \n";
+    		for (auto q : bCart)
+    			cout << q.getTitle() << "\n";
+			cout << "Magazines in Cart: \n";
+    		for (auto q : mCart)
+    			cout << q.getTitle() << " issue No. "<< q.getIssue() <<"\n";
+			cout << "CDs in Cart: \n";
+    		for (auto q : cCart)
+    			cout << q.getTitle() << "\n";
+		}
+	
+		void printDetails()
+		{
+			cout << "Books:\n";
+			for (auto q : bCart)
+				q.details();
+			cout << "Magazines:\n";
+			for (auto q : mCart)
+				q.details();
+			cout << "CDs:\n";
+			for (auto q : cCart)
+				q.details();
+		}
+		
+		void printFile()
+		{
+    		ofstream file;
+    		file.open ("Shopping_Cart.txt");
+			file << "Books:\n";
+			for (auto q : bCart)
+				file << q.getTitle() << ", $" << q.getPrice() << ", author: " << q.getAuthor() <<  "\n";
+			file << "Magazines:\n";
+			for (auto q : mCart)
+				file << q.getTitle() << ", $" << q.getPrice() <<  ", issue number: " << q.getIssue() << ", month: " << q.getMonth() << ", year: " << q.getYear() << "\n";
+			file << "CDs:\n";
+			for (auto q : cCart)
+				file << q.getTitle() << ", $" << q.getPrice() << ", artist: " << q.getArtist() << ", label: " << q.getLabel() <<  "\n";
+
+    		file.close();
+
+    		cout << "Cart Printed to 'Shopping_Cart.txt' \n ";		
+		}
+};
+
+
+Book create(string a, double b, string x)
+{
+	Book i;
+	i = Book(a, b, x);
+	return i;
+}
+Mag create(string a, double b, int y, int z, int q)
+{
+	Mag i;
+	i = Mag(a, b, y, z, q);
+	return i;
+}
+CD create(string a, double b, string x, string y)
+{
+	CD i;
+	i = CD(a, b, x, y);
+	return i;
+}
+
+int main() 
+{
+	double d;
+    Cart c;
+
+    cout << "Enter one of the following commands \n";
+    cout << "end: terminates program \n";
+    cout << "print: prints the shopping cart to terminal \n";
+    cout << "add: add items to shopping cart \n";
+    cout << "print: prints cart \n";
+    cout << "sum: prints summary of cart \n";
+    cout << "file: prints details of shopping cart to a file \n\n";
+
+    string a;
+    while (true)
+    {
+    	getline(cin, a);
+    	if(a == "end")
+    		break;
+    	else if(a == "print")
+    		c.printCart();
+    	
+
+    	else if (a == "add")
+    	{
+    		while (true)
+    		{
+
+    			string b;
+
+    			while(true)
+    			{
+    				cout << "please enter item type: book, magazine(mag), or CD. Enter 'end' to go back \n";
+    				getline(cin, b);
+	    			if(b == "book")
+    				{
+
+
+    					cout << "please enter title: ";
+    					string tit;
+    					getline(cin, tit);
+	    				cout << "\n";
+
+		    			cout << "please enter price (must be a double): ";
+    					string pr;
+    					getline(cin, pr);
+    					double pri;
+    					stringstream ss( pr );
+	    				ss >> pri;
+    					cout << "\n";
+
+    					cout << "please enter author: ";
+    					string aut;
+    					getline(cin, aut);
+	    				cout << "\n";
+
+    					Book book;
+    					book = create(tit, pri, aut);
+
+	    				c.addItem(book);
+
+    					cout << book.getTitle() << " has been added to your cart \n";
+
+    					break;
+
+    				}
+    				else if(b == "magazine" || b == "mag")
+	    			{
+	    				cout << "please enter title: ";
+	    				string tit;
+	    				getline(cin, tit);
+		    			cout << "\n";
+
+
+	    				cout << "please enter price (must be a double): ";
+    					string pr;
+    					getline(cin, pr);
+    					double pri;
+	    				stringstream ss;
+	    				ss << pr;
+    					ss >> pri;
+	    				cout << "\n";
+
+
+    					cout << "please enter issue number (must be an int): ";
+	    				string is;
+    					getline(cin, is);
+    					int iss;
+    					stringstream st( is );
+		    			st >> iss;
+    					cout << "\n";
+
+	    				cout << "please enter month (must be an int): ";
+    					string mo;
+	    				getline(cin, mo);
+		    			int mon;
+    					stringstream sy( mo );
+    					sy >> mon;
+    					cout << "\n";
+
+	    				cout << "please enter year (must be an int): ";	
+    					string ye;
+	    				getline(cin, ye);
+    					int yea;
+    					stringstream su( ye );
+    					su >> yea;
+    					cout << "\n";
+
+	    				Mag mag;
+
+    					mag = create(tit, pri, iss, mon, yea);
+    					c.addItem(mag);
+
+
+	    				cout << mag.getTitle() << " has been added to your cart \n";
+	    				break;
+    				}
+    				else if (b == "CD")
+    				{
+    					cout << "please enter title: ";
+	    				string tit;
+    					getline(cin, tit);
+    					cout << "\n";
+
+	    				cout << "please enter price (must be a double): ";
+    					string pr;
+    					getline(cin, pr);
+    					double pri;
+    					stringstream ss( pr );
+	    				ss >> pri;
+    					cout << "\n";
+
+    					cout << "please enter artist: ";
+    					string ar;
+    					getline(cin, ar);
+	    				cout << "\n";
+
+    					cout << "please enter label: ";
+    					string la;
+    					getline(cin, la);
+    					cout << "\n";
+
+
+
+	    				CD cd;
+
+    					cd = create(tit, pri, ar, la);
+    					c.addItem(cd);
+
+    					cout << cd.getTitle() << " has been added to your library \n";
+    					break;
+    				}
+    				else if(b == "end")
+    				{
+    					break;
+    				}
+    				else
+    				{
+    					cout << "please enter a valid type\n";
+    					continue;
+    				}
+    			}	
+    			if(b == "end")
+    				break;
+
+    			string ans;
+    			while (true)
+    			{
+    				cout << "add something else? y/n: ";
+    				getline(cin, ans);
+
+    				if(ans == "n" || "y")
+    					break;
+    				else
+    				{
+    					cout << "invalid input \n";
+    					continue;
+    				}
+    			}
+    			if(ans == "y")
+    				continue;
+    			else
+    				break;
+
+
+    		}
+    	}
+
+    	else if(a == "print")
+    		c.printCart();
+    	
+    	else if(a == "sum")
+    		c.printDetails();
+    	else if(a == "file")
+    	{
+    		c.printFile();
+    	}
+    	
+    	else
+    		cout << "please enter a valid command \n";
+
+    	cout << "Enter another command, or enter 'end' \n";
+    }
+    cout << "Thank you \n \n";
+    return 0;
+}
